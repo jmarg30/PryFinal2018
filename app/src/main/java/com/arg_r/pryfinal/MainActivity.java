@@ -1,8 +1,10 @@
 package com.arg_r.pryfinal;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     String usuarioNombre;
     int codigo;
     int opcion;
+    int est = 1;
     //GameExBd mGameExBd = new GameExBd();
    // SQLiteDatabase mDatabase;
 
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 txtPassword.getText().toString(), ranking, Integer.parseInt(txtEstado.getText().toString()));
         if (estado == 0) {
             Toast.makeText(getApplicationContext(), "No se pudo actualizar", Toast.LENGTH_LONG).show();
+            showErrorDialog("El usuario no existe. \n ¿Desea registrarlo?");
         } else {
             txtDni.setText("");
             txtNombre.setText("");
@@ -130,5 +134,46 @@ public class MainActivity extends AppCompatActivity {
 
         Usuario usuario =  mMant.cargarUsuario(codigo);
         return usuario;
+    }
+
+    public void insertar() {
+
+        UsuarioMant mUsuarioMant = new UsuarioMant();
+        mUsuarioMant.setContext(this);
+
+        long estado = 0;
+
+        estado = mUsuarioMant.insertar(txtDni.getText().toString(), txtNombre.getText().toString(),
+                txtApellidos.getText().toString(), txtCorreo.getText().toString(),
+                txtPassword.getText().toString(), ranking, est);
+
+        if (estado == 0) {
+            Toast.makeText(getApplicationContext(), "Registro no insertado", Toast.LENGTH_LONG).show();
+        } else {
+            txtDni.setText("");
+            txtNombre.setText("");
+            txtApellidos.setText("");
+            txtCorreo.setText("");
+            txtPassword.setText("");
+            txtEstado.setText("");
+            Toast.makeText(getApplicationContext(), "Registro insertado", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Oops")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        insertar();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }
