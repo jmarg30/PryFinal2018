@@ -43,6 +43,7 @@ public class ListaUsuariosActivity extends AppCompatActivity {
                 obj.putString("Nombre", nombre);
                 obj.putInt("op", 3);
                 intent.putExtras(obj);
+                finish();
                 startActivity(intent);
             }
         });
@@ -56,5 +57,16 @@ public class ListaUsuariosActivity extends AppCompatActivity {
         listado = mMant.listar();
         UsuarioAdapter adapter = new UsuarioAdapter(this, listado);
         mListView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(ListaUsuariosActivity.this, MainActivity.class);
+        Bundle obj = new Bundle();
+        obj.putString("Nombre", nombre);
+        obj.putInt("op", 1);
+        intent.putExtras(obj);
+        startActivity(intent);
     }
 }

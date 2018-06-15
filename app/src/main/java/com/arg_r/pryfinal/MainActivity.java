@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     public void mostrar() {
         Intent intent = new Intent(MainActivity.this, ListaUsuariosActivity.class);
         intent.putExtra("Nombre", usuarioNombre);
+        finish();
         startActivity(intent);
     }
 
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 txtPassword.getText().toString(), ranking, Integer.parseInt(txtEstado.getText().toString()));
         if (estado == 0) {
             Toast.makeText(getApplicationContext(), "No se pudo actualizar", Toast.LENGTH_LONG).show();
-            showErrorDialog("El usuario no existe. \n ¿Desea registrarlo?");
+            showErrorDialog("El usuario no existe. \n¿Desea registrarlo?");
         } else {
             txtDni.setText("");
             txtNombre.setText("");
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             txtCorreo.setText("");
             txtPassword.setText("");
             txtEstado.setText("");
+            txtDni.requestFocus();
             Toast.makeText(getApplicationContext(), "Registro insertado", Toast.LENGTH_SHORT).show();
 
         }
@@ -172,7 +174,18 @@ public class MainActivity extends AppCompatActivity {
                         insertar();
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        txtDni.setText("");
+                        txtNombre.setText("");
+                        txtApellidos.setText("");
+                        txtCorreo.setText("");
+                        txtPassword.setText("");
+                        txtEstado.setText("");
+                        txtDni.requestFocus();
+                    }
+                })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
