@@ -25,4 +25,11 @@
     <string name="reporte_general">REPORTE GENERAL:</string>
     <string name="registrar">REGISTRAR</string>
     <string name="guardar">Guardar</string>
+    <string name="eliminar">ELIMINAR</string>
+    <string name="nuevo">NUEVO</string>
+    <string name="usuarios">Usuarios</string>
+    <string name="juegos">Juegos</string>
+    <string name="mantenimientos">Mantenimientos</string>
+    <string name="_0_no_disponoble_1_disponible">0:No Disponoble 1:Disponible</string>
+    <string name="disponibilidad">0:No Disponoble 1:Disponible 2:Desarrollador, 3:Administrador</string>
 </resources>

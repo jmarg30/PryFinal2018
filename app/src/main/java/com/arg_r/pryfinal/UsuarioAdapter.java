@@ -57,6 +57,12 @@ public class UsuarioAdapter extends ArrayAdapter<Usuario> {
             case 1:
                 textEstado.setText("Disponible");
                 break;
+            case 2:
+                textEstado.setText("Desarrollador");
+                break;
+            case 3:
+                textEstado.setText("Administrador");
+                break;
             default: textEstado.setText("");
                 break;
         }

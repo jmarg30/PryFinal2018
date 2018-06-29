@@ -8,10 +8,10 @@ public class Usuario {
     private String apellidos;
     private String correo;
     private String password;
-    private String rank;
+    private int rank;
     private int estado;
 
-    public Usuario(String dni, String nombre, String apellidos, String correo, String password, String rank, int estado) {
+    public Usuario(String dni, String nombre, String apellidos, String correo, String password, int rank, int estado) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -72,11 +72,11 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 

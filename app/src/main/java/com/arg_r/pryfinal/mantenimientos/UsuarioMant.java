@@ -25,7 +25,7 @@ public class UsuarioMant {
     }
 
 
-    public long insertar(String dni, String nom, String ape, String corr, String pass, String rank, int est) {
+    public long insertar(String dni, String nom, String ape, String corr, String pass, int rank, int est) {
 
         SQLiteDatabase mDatabase = mGameExBd.setDatabase(mContext);
         long estado = 0;
@@ -64,6 +64,7 @@ public class UsuarioMant {
                 usuario.setNombre(cursor.getString(2));
                 usuario.setCorreo(cursor.getString(4));
                 usuario.setPassword(cursor.getString(5));
+                usuario.setEstado(cursor.getInt(7));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -84,7 +85,7 @@ public class UsuarioMant {
                 usuario.setApellidos(cursor.getString(3));
                 usuario.setCorreo(cursor.getString(4));
                 usuario.setPassword(cursor.getString(5));
-                usuario.setRank(cursor.getString(6));
+                usuario.setRank(cursor.getInt(6));
                 usuario.setEstado(cursor.getInt(7));
             }
         } catch (Exception e) {
@@ -109,7 +110,7 @@ public class UsuarioMant {
                 usuario.setApellidos(cursor.getString(3));
                 usuario.setCorreo(cursor.getString(4));
                 usuario.setPassword(cursor.getString(5));
-                usuario.setRank(cursor.getString(6));
+                usuario.setRank(cursor.getInt(6));
                 usuario.setEstado(cursor.getInt(7));
 
                 listado.add(usuario);
@@ -120,7 +121,7 @@ public class UsuarioMant {
         return listado;
     }
 
-    public long actualizar(int codigo, String dni, String nom, String ape, String corr, String pass, String rank, int est) {
+    public long actualizar(int codigo, String dni, String nom, String ape, String corr, String pass, int rank, int est) {
 
         SQLiteDatabase mDatabase = mGameExBd.setDatabase(mContext);
         long estado = 0;

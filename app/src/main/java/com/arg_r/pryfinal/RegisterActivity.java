@@ -1,7 +1,6 @@
 package com.arg_r.pryfinal;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.arg_r.pryfinal.bd.GameExBd;
 import com.arg_r.pryfinal.mantenimientos.UsuarioMant;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -20,7 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView textCorreo;
     private TextView textPassword;
     private Button btnRegistrar;
-    String ranking = "0";
+    int ranking = 0;
     int est = 1;
     //SQLiteDatabase mDatabase;
     //GameExBd mGameExBd;
@@ -61,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Registro no insertado", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), "Registro insertado", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, AdminActivity.class);
             Bundle obj = new Bundle();
             obj.putString("Nombre", textNombre.getText().toString());
             obj.putInt("op", 2);

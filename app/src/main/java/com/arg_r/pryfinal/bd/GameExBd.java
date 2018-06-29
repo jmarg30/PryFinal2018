@@ -14,7 +14,7 @@ public class GameExBd {
     private String sqlbd = "create table  if not  exists " +
             nombreTabla + " ( codigo integer  primary key  autoincrement," +
             "dni text not null , nombre text not  null , apellidos text not  null , " +
-            "correo text not null , password text not null , ranking text , estado integer not null );";
+            "correo text not null , password text not null , ranking integer not null , estado integer not null );";
 
     public GameExBd() {
 

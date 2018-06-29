@@ -206,9 +206,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             usuario = mant.Seleccionar(mEmailView.getText().toString(), mPasswordView.getText().toString());
             if (usuario.getCorreo() != null && usuario.getPassword() != null) {
                 showProgress(true);
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, AdminConsoleActivity.class);
                 Bundle obj = new Bundle();
                 obj.putString("Nombre", usuario.getNombre());
+                obj.putInt("Estado", usuario.getEstado());
                 obj.putInt("op", 1);
                 intent.putExtras(obj);
                 startActivity(intent);

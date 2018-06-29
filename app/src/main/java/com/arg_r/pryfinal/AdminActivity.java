@@ -2,7 +2,6 @@ package com.arg_r.pryfinal;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,33 +10,34 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.arg_r.pryfinal.bd.GameExBd;
 import com.arg_r.pryfinal.entidades.Usuario;
 import com.arg_r.pryfinal.mantenimientos.UsuarioMant;
 
-public class MainActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
     private Button btnGuardar, btnMostrar, btnEliminar;
     private TextView txtUsuario, txtDni, txtNombre, txtApellidos, txtCorreo, txtPassword, txtEstado;
     UsuarioMant mMant = new UsuarioMant();
-    String ranking = "0";
+    int ranking = 0;
     String usuarioNombre;
     int codigo;
     int opcion;
     int est = 1;
+    int state;
     //GameExBd mGameExBd = new GameExBd();
    // SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_admin);
 
         mMant.setContext(this);
         txtUsuario = findViewById(R.id.txtUsuario);
         Intent intent = getIntent();
         Bundle obj = intent.getExtras();
         usuarioNombre = obj.getString("Nombre");
+        state = obj.getInt("Estado");
         opcion = obj.getInt("op");
         codigo = obj.getInt("codigo");
 
@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         txtPassword = findViewById(R.id.Tpassword);
         txtEstado = findViewById(R.id.estado);
 
+        btnGuardar = findViewById(R.id.BTNGUARDAR);
+        btnMostrar = findViewById(R.id.BTNMOSTRAR);
+        btnEliminar = findViewById(R.id.BTNELIMINAR);
+
         if (opcion == 3) {
             Usuario usuario =  cargarCampos(codigo);
             txtDni.setText(usuario.getDni());
@@ -58,18 +62,39 @@ public class MainActivity extends AppCompatActivity {
             txtCorreo.setText(usuario.getCorreo());
             txtPassword.setText(usuario.getPassword());
             txtEstado.setText(String.valueOf(usuario.getEstado()));
+            if (state == 3) {
+                txtEstado.setHint(R.string.disponibilidad);
+            }
+        } else if (opcion == 2) {
+            txtEstado.setText("1");
+            txtEstado.setEnabled(false);
+            btnEliminar.setVisibility(View.GONE);
         }
-
-        btnGuardar = findViewById(R.id.BTNGUARDAR);
-        btnMostrar = findViewById(R.id.BTNMOSTRAR);
-        btnEliminar = findViewById(R.id.BTNELIMINAR);
 
         //mDatabase = mGameExBd.setDatabase();
 
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actualizar();
+
+                switch (state) {
+                    case 3:
+                        if (Integer.parseInt(txtEstado.getText().toString()) > 3
+                                && Integer.parseInt(txtEstado.getText().toString()) >= 0) {
+                            txtEstado.setError("Debe ingresar 0:No Disponible, 1:Disponible, " +
+                                    "2:Desarrolador, ó 3:Administrador");
+                        } else {
+                            guardar();
+                        }
+                        break;
+                    default:
+                        if (Integer.parseInt(txtEstado.getText().toString()) != 1
+                                && Integer.parseInt(txtEstado.getText().toString()) != 0) {
+                            txtEstado.setError("Debe ingresar 0:No Disponible, 1:Disponible,");
+                        } else {
+                            guardar();
+                        }
+                }
             }
         });
 
@@ -83,14 +108,18 @@ public class MainActivity extends AppCompatActivity {
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eliminar();
+                showErrorDialog("¿Seguro que desea eliminar a " + txtNombre.getText() + " "
+                        + txtApellidos.getText() + "?");
             }
         });
     }
 
     public void mostrar() {
-        Intent intent = new Intent(MainActivity.this, ListaUsuariosActivity.class);
-        intent.putExtra("Nombre", usuarioNombre);
+        Intent intent = new Intent(AdminActivity.this, ListaUsuariosActivity.class);
+        Bundle obj = new Bundle();
+        obj.putString("Nombre", usuarioNombre);
+        obj.putInt("Estado", state);
+        intent.putExtras(obj);
         finish();
         startActivity(intent);
     }
@@ -102,15 +131,9 @@ public class MainActivity extends AppCompatActivity {
                 txtPassword.getText().toString(), ranking, Integer.parseInt(txtEstado.getText().toString()));
         if (estado == 0) {
             Toast.makeText(getApplicationContext(), "No se pudo actualizar", Toast.LENGTH_LONG).show();
-            showErrorDialog("El usuario no existe. \n¿Desea registrarlo?");
         } else {
-            txtDni.setText("");
-            txtNombre.setText("");
-            txtApellidos.setText("");
-            txtCorreo.setText("");
-            txtPassword.setText("");
-            txtEstado.setText("");
             Toast.makeText(getApplicationContext(), "Actualizacion exitosa", Toast.LENGTH_SHORT).show();
+            mostrar();
         }
     }
 
@@ -121,13 +144,8 @@ public class MainActivity extends AppCompatActivity {
         if (estado == 0) {
             Toast.makeText(getApplicationContext(), "No se pudo eliminar", Toast.LENGTH_LONG).show();
         } else {
-            txtDni.setText("");
-            txtNombre.setText("");
-            txtApellidos.setText("");
-            txtCorreo.setText("");
-            txtPassword.setText("");
-            txtEstado.setText("");
             Toast.makeText(getApplicationContext(), "Registro Eliminado", Toast.LENGTH_SHORT).show();
+            mostrar();
         }
     }
 
@@ -164,28 +182,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void guardar() {
+        if (opcion == 3) {
+            actualizar();
+        } else {
+            insertar();
+        }
+    }
+
     private void showErrorDialog(String message) {
         new AlertDialog.Builder(this)
-                .setTitle("Oops")
+                .setTitle("Eliminar Usuario")
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        insertar();
+                        eliminar();
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        txtDni.setText("");
-                        txtNombre.setText("");
-                        txtApellidos.setText("");
-                        txtCorreo.setText("");
-                        txtPassword.setText("");
-                        txtEstado.setText("");
-                        txtDni.requestFocus();
-                    }
-                })
+                .setNegativeButton(android.R.string.no, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
